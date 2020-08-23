@@ -1,0 +1,33 @@
+:root {
+	--font-main: 'Montserrat', sans-serif;
+	--font-alternative: 'Rajdhani', sans-serif;
+
+	--color-main: #9e805e;
+}
+
+
+
+
+
+/* Tags */
+
+body {
+	background-color: #f5f5f5;
+	font-size: 1rem;
+	font-variant: none;
+	margin: 0;
+	position: relative;
+}
+
+button:focus,
+button:hover,
+button.btn:focus,
+button.btn:hover {
+	outline: none;
+	box-shadow: none;
+}
+
+html, body, #root {
+	height: 100%;
+	width: 100%;
+}
