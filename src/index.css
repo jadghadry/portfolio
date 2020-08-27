@@ -19,14 +19,6 @@ body {
 	position: relative;
 }
 
-button:focus,
-button:hover,
-button.btn:focus,
-button.btn:hover {
-	outline: none;
-	box-shadow: none;
-}
-
 html, body, #root {
 	height: 100%;
 	width: 100%;

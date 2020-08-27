@@ -2,11 +2,12 @@ import React from 'react'
 import CountUp from 'react-countup'
 import VisibilitySensor from 'react-visibility-sensor'
 import { Col, Rate, Row, Space } from 'antd'
+import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 
-import { facts, testimonials } from './About.constants.js'
+import { about } from './About.constants.js'
 
 import SectionHeading from '../../components/SectionHeading'
-import { Container, Divider } from '../../shared/styles'
+import { Button, Container, Divider } from '../../shared/styles'
 import { Text, Title } from '../../shared/typography'
 
 
@@ -72,26 +73,27 @@ const Testimonial = (props) => {
 
 		<Container
 			padding={{
-				horizontal: { xs: props.faded ? '32px' : '56px' },
-				vertical: { xs: props.faded ? '24px' : '48px' }
+				horizontal: { xs: '56px' },
+				vertical: { xs: '48px' }
 			}}
 			style={{
-				backgroundColor: props.faded ? '#eaeaea' : '#fff',
-				boxShadow: !props.faded && '1px 1px 20px #00000010',
-				lineHeight: props.faded && 'normal',
+				backgroundColor: '#fff',
+				boxShadow: '1px 1px 20px #00000010',
+				display: 'flex',
+				flexDirection: 'column',
+				height: '100%',
+				justifyContent: 'center',
+				position: 'relative'
 			}}
 		>
 
 			<Space direction='vertical' size={12}>
-				{
-					!props.faded &&
-					<Rate allowHalf defaultValue={props.rating} disabled />
-				}
-				<Text fontSize={{ xs: props.faded ? '0.75rem' : '1rem' }}>
+				<Rate allowHalf defaultValue={props.rating} disabled />
+				<Text>
 					{props.testimonial}
 				</Text>
 				<Title
-					fontSize={{ xs: props.faded ? '1rem' : '1.25rem' }}
+					fontSize={{ xs: '1.25rem' }}
 					style={{ color: '#000', fontWeight: 700 }}
 				>
 					{props.author?.name}
@@ -108,16 +110,60 @@ const Testimonial = (props) => {
 
 
 
+const Statistics = (props) => {
+
+	return (
+
+		<Container
+			padding={{
+				horizontal: { xs: '32px' },
+				vertical: { xs: '24px' }
+			}}
+			style={{
+				backgroundColor: '#eaeaea',
+				display: 'flex',
+				flexDirection: 'column',
+				height: '100%',
+				justifyContent: 'center',
+			}}
+		>
+
+			<Space direction='vertical' size={0}>
+				<Title
+					fontSize={{ xs: '2.5rem' }}
+					style={{ color: '#000', fontWeight: 700 }}
+				>
+					{`${props.averageRating || 5}/5`}
+				</Title>
+				<Text>Average Rating</Text>
+			</Space>
+
+		</Container>
+
+	)
+
+}
+
+
+
+
+
 const About = (props) => {
 
 	const [index, setIndex] = React.useState(0)
+	const averageRating = Math.round(about.testimonials.reduce((a, v) => a + v.rating, 0) / about.testimonials.length * 100) / 100
 
-	React.useEffect(() => {
-		const interval = setInterval(() => {
-			setIndex((prev) => (prev + 1) % testimonials.length)
-		}, 12000)
-		return () => clearInterval(interval)
-	}, [])
+	const mod = (x, m) => {
+		return (x % m + m) % m
+	}
+
+	const decrementIndex = () => {
+		setIndex((prev) => mod(prev - 1, about.testimonials.length))
+	}
+
+	const incrementIndex = () => {
+		setIndex((prev) => mod(prev + 1, about.testimonials.length))
+	}
 
 	return (
 
@@ -144,7 +190,7 @@ const About = (props) => {
 						</Divider>
 					</Col>
 					{
-						facts.map((object) => {
+						about.facts.map((object) => {
 							const { key, ...other } = object
 							return (
 								<Col key={key} xs={24} md={8}>
@@ -154,14 +200,23 @@ const About = (props) => {
 						})
 					}
 				</Row>
-				<Row align='middle' gutter={[32, 32]} justify='center' style={{ marginTop: '32px' }} >
+				<Row gutter={[32, 32]} style={{ marginTop: '32px' }} >
 					<Col xs={24}>
 						<Divider>
 							<Text>Testimonials</Text>
 						</Divider>
 					</Col>
-					<Col xs={24}>
-						<Testimonial {...testimonials[index]} />
+					<Col xs={24} lg={8}>
+						<Statistics averageRating={averageRating} />
+					</Col>
+					<Col xs={24} lg={16}>
+						<Testimonial {...about.testimonials[index]} currentIndex={index + 1} totalCount={about.testimonials.length} />
+					</Col>
+					<Col xs={24} lg={{ offset: 8, span: 16 }}>
+						<Space size={16}>
+							<Button onClick={decrementIndex}><LeftOutlined /></Button>
+							<Button onClick={incrementIndex}><RightOutlined /></Button>
+						</Space>
 					</Col>
 				</Row>
 

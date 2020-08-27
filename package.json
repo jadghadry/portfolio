@@ -3,6 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
+		"@ant-design/icons": "^4.2.2",
 		"antd": "^4.6.0",
 		"cors": "^2.8.5",
 		"firebase": "^7.19.0",

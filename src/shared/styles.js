@@ -4,6 +4,24 @@ import styled from 'styled-components'
 
 
 
+export const Button = styled.button`
+
+	background-color: ${props => props.backgroundColor || '#e5e5e5'};
+	box-shadow: none;
+	color: ${props => props.color || '#000'};
+	border: none;
+	outline: none;
+	padding: 12px 16px;
+	transition: all 0.2s ease-in-out;
+
+	&:hover {
+		background-color: #fff;
+		box-shadow: 1px 1px 20px #00000010;
+		cursor: pointer;
+	}
+
+`
+
 export const Container = styled.div`
 
 	@media only all {
