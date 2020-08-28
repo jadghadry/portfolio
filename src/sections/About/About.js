@@ -4,7 +4,7 @@ import VisibilitySensor from 'react-visibility-sensor'
 import { Col, Rate, Row, Space } from 'antd'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 
-import { about } from './About.constants.js'
+import { facts, testimonials } from './About.constants.js'
 
 import SectionHeading from '../../components/SectionHeading'
 import { Button, Container, Divider } from '../../shared/styles'
@@ -67,49 +67,6 @@ const Fact = (props) => {
 
 
 
-const Testimonial = (props) => {
-
-	return (
-
-		<Container
-			padding={{
-				horizontal: { xs: '56px' },
-				vertical: { xs: '48px' }
-			}}
-			style={{
-				backgroundColor: '#fff',
-				boxShadow: '1px 1px 20px #00000010',
-				display: 'flex',
-				flexDirection: 'column',
-				height: '100%',
-				justifyContent: 'center',
-				position: 'relative'
-			}}
-		>
-
-			<Space direction='vertical' size={12}>
-				<Rate allowHalf defaultValue={props.rating} disabled />
-				<Text>
-					{props.testimonial}
-				</Text>
-				<Title
-					fontSize={{ xs: '1.25rem' }}
-					style={{ color: '#000', fontWeight: 700 }}
-				>
-					{props.author?.name}
-				</Title>
-			</Space>
-
-		</Container>
-
-	)
-
-}
-
-
-
-
-
 const Statistics = (props) => {
 
 	return (
@@ -148,22 +105,67 @@ const Statistics = (props) => {
 
 
 
-const About = (props) => {
+const Testimonials = (props) => {
 
 	const [index, setIndex] = React.useState(0)
-	const averageRating = Math.round(about.testimonials.reduce((a, v) => a + v.rating, 0) / about.testimonials.length * 100) / 100
 
-	const mod = (x, m) => {
-		return (x % m + m) % m
-	}
+	const selected = props.values[index]
 
-	const decrementIndex = () => {
-		setIndex((prev) => mod(prev - 1, about.testimonials.length))
-	}
+	const mod = (x, m) => (x % m + m) % m
 
-	const incrementIndex = () => {
-		setIndex((prev) => mod(prev + 1, about.testimonials.length))
-	}
+	const decrementIndex = () => setIndex((prev) => mod(prev - 1, props.values.length))
+	const incrementIndex = () => setIndex((prev) => mod(prev + 1, props.values.length))
+
+	return (
+
+		<Space size={24} direction='vertical'>
+
+			<Container
+				padding={{
+					horizontal: { xs: '56px' },
+					vertical: { xs: '48px' }
+				}}
+				style={{
+					backgroundColor: '#fff',
+					boxShadow: '1px 1px 20px #00000010',
+					display: 'flex',
+					flexDirection: 'column',
+					justifyContent: 'center',
+					position: 'relative'
+				}}
+			>
+
+				<Space direction='vertical' size={12}>
+					<Rate allowHalf value={selected.rating} disabled />
+					<Text>{selected.testimonial}</Text>
+					<Title
+						fontSize={{ xs: '1.25rem' }}
+						style={{ color: '#000', fontWeight: 700 }}
+					>
+						{selected.author?.name}
+					</Title>
+				</Space>
+
+			</Container>
+
+			<Space size={16}>
+				<Button onClick={decrementIndex}><LeftOutlined /></Button>
+				<Button onClick={incrementIndex}><RightOutlined /></Button>
+			</Space>
+
+		</Space>
+
+	)
+
+}
+
+
+
+
+
+const About = (props) => {
+
+	const averageRating = Math.round(testimonials.reduce((a, v) => a + v.rating, 0) / testimonials.length * 100) / 100
 
 	return (
 
@@ -190,7 +192,7 @@ const About = (props) => {
 						</Divider>
 					</Col>
 					{
-						about.facts.map((object) => {
+						facts.map((object) => {
 							const { key, ...other } = object
 							return (
 								<Col key={key} xs={24} md={8}>
@@ -210,13 +212,7 @@ const About = (props) => {
 						<Statistics averageRating={averageRating} />
 					</Col>
 					<Col xs={24} lg={16}>
-						<Testimonial {...about.testimonials[index]} currentIndex={index + 1} totalCount={about.testimonials.length} />
-					</Col>
-					<Col xs={24} lg={{ offset: 8, span: 16 }}>
-						<Space size={16}>
-							<Button onClick={decrementIndex}><LeftOutlined /></Button>
-							<Button onClick={incrementIndex}><RightOutlined /></Button>
-						</Space>
+						<Testimonials values={testimonials} />
 					</Col>
 				</Row>
 
